@@ -20,6 +20,7 @@
         "app.ts",
         "sprite.ts",
         "editor.ts",
+        "samples.ts",
         "cursor.ts",
         "home.ts",
         "quadtree.ts",

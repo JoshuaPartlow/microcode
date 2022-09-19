@@ -144,6 +144,14 @@ namespace microcode {
             )
             control.onEvent(
                 ControllerButtonEvent.Pressed,
+                controller.A.id,
+                () => {
+                    this.app.popScene()
+                    this.app.pushScene(new Samples(this.app))
+                }
+            )
+            control.onEvent(
+                ControllerButtonEvent.Pressed,
                 controller.up.id,
                 () => {
                     this.paused = !this.paused
