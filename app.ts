@@ -30,6 +30,8 @@ namespace microcode {
                 progdef: progdef.toObj(),
             }
             const s = JSON.stringify(saved)
+            console.log("Program JSON: ")
+            console.log(s)
             settings.writeString(slot, s)
         }
 
