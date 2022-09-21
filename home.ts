@@ -1,13 +1,25 @@
 namespace microcode {
-    const STORED_SAMPLES =
-        ["{\"progdef\":{\"P\":[{\"R\":[{\"S\":[],\"A\":[\"A5\"],\"M\":[\"M15(0101010101100010101000100)\"]},{\"S\":[\"S4\"],\"A\":[\"A1\"],\"M\":[\"M2\"]}]},{\"R\":[{\"S\":[],\"A\":[\"A5\"],\"M\":[\"M15(0000000000000000000000000)\"]},{\"S\":[\"S4\"],\"A\":[\"A1\"],\"M\":[\"M1\"]},{\"S\":[],\"A\":[]}]},{},{},{}]}}",
-            "{\"progdef\":{\"P\":[{\"R\":[{\"S\":[\"S2\"],\"A\":[\"A5\"],\"F\":[\"F3\"],\"M\":[\"M15(1101111011000001000101110)\"]},{\"S\":[\"S2\"],\"A\":[\"A5\"],\"F\":[\"F4\"],\"M\":[\"M15(1101111011000000111010001)\"]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{}]}}"]
-    
-    export class Home extends CursorScene {
-        editBtn: Button
-        sampleBtn: Button
-        sampleBtn2: Button
+    const STORED_SAMPLES = [
+        "{\"progdef\":{\"P\":[{\"R\":[{\"S\":[\"S4\"],\"A\":[\"A5\"],\"M\":[\"M15(0101010101100010101000100)\",\"M15(0000000000000000000000000)\"]},{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]}]}}",
+        "{\"progdef\":{\"P\":[{\"R\":[{\"S\":[\"S2\"],\"A\":[\"A5\"],\"F\":[\"F3\"],\"M\":[\"M15(1101111011000001000101110)\"]},{\"S\":[\"S2\"],\"A\":[\"A5\"],\"F\":[\"F4\"],\"M\":[\"M15(1101111011000000111010001)\"]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{\"R\":[{\"S\":[],\"A\":[]}]},{}]}}"
+    ]
+    const CAROUSEL_NAMES = [
+        "editor",
+        "flashing heart sample",
+        "smiley buttons sample"
+    ]
+    const CAROUSEL_ICON_NAMES = [
+        "paint",
+        "flashing_heart",
+        "smiley_buttons"
+    ]
 
+    export class Home extends CursorScene {
+        sampleBtn: Button
+        selectBtnL: Button
+        selectBtnR: Button
+        carouselCounter: number
+    
         constructor(app: App) {
             super(app)
             this.compileProgram()
@@ -22,47 +34,58 @@ namespace microcode {
 
         /* override */ startup() {
             super.startup()
+            this.carouselCounter = 0
 
-            this.editBtn = new Button({
+            this.selectBtnL = new Button({
                 parent: null,
                 style: "white",
-                icon: "paint",
-                ariaId: "editor",
+                icon: "prev_page",
+                ariaId: "previous sample button",
                 x: -26,
                 y: 32,
                 onClick: () => {
-                    this.app.popScene()
-                    this.app.pushScene(new Editor(this.app))
-                },
+                    if (this.carouselCounter > 0) {
+                        this.carouselCounter--
+                    }
+                    this.sampleBtn.setIcon(CAROUSEL_ICON_NAMES[this.carouselCounter])
+                }
             })
             this.sampleBtn = new Button({
                 parent: null,
                 style: "white",
-                icon: "plus",
-                ariaId: "flashing heart sample",
+                icon: CAROUSEL_ICON_NAMES[this.carouselCounter],
+                ariaId: CAROUSEL_NAMES[this.carouselCounter],
                 x: 0,
                 y: 32,
                 onClick: () => {
-                    settings.writeString(SAVESLOT_AUTO, STORED_SAMPLES[0])
-                    this.app.popScene()
-                    this.app.pushScene(new Editor(this.app))
+                    if (this.carouselCounter === 0) {
+                        this.app.popScene()
+                        this.app.pushScene(new Editor(this.app))
+                    }
+                    else {
+                        settings.writeString(SAVESLOT_AUTO, STORED_SAMPLES[this.carouselCounter-1])
+                        this.app.popScene()
+                        this.app.pushScene(new Editor(this.app))
+                    }
+
                 },
             })
-            this.sampleBtn2 = new Button({
+            this.selectBtnR = new Button({
                 parent: null,
                 style: "white",
-                icon: "plus",
-                ariaId: "smiley buttons sample",
+                icon: "next_page",
+                ariaId: "next sample button",
                 x: 26,
                 y: 32,
                 onClick: () => {
-                    settings.writeString(SAVESLOT_AUTO, STORED_SAMPLES[1])
-                    this.app.popScene()
-                    this.app.pushScene(new Editor(this.app))
-                },
+                    if (this.carouselCounter < CAROUSEL_NAMES.length-1) {
+                        this.carouselCounter++
+                    }
+                    this.sampleBtn.setIcon(CAROUSEL_ICON_NAMES[this.carouselCounter])
+                }
             })
 
-            this.navigator.addButtons([this.editBtn, this.sampleBtn, this.sampleBtn2])
+            this.navigator.addButtons([this.selectBtnL, this.sampleBtn, this.selectBtnR])
         }
 
         /* override */ shutdown() {
@@ -111,9 +134,9 @@ namespace microcode {
                     dx,
                 Screen.TOP_EDGE + 50 - wordLogo.height + dx + this.yOffset
             )
-            this.editBtn.draw()
+            this.selectBtnL.draw()
             this.sampleBtn.draw()
-            this.sampleBtn2.draw()
+            this.selectBtnR.draw()
             super.draw()
         }
     }
