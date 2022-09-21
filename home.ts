@@ -38,11 +38,11 @@ namespace microcode {
 
             this.selectBtnL = new Button({
                 parent: null,
-                style: ButtonStyles.ShadowedWhite,
+                style: ButtonStyles.BorderedPurple,
                 icon: "prev_page",
                 ariaId: "previous sample button",
-                x: -26,
-                y: 32,
+                x: -32,
+                y: 40,
                 onClick: () => {
                     if (this.carouselCounter > 0) {
                         this.carouselCounter--
@@ -52,11 +52,11 @@ namespace microcode {
             })
             this.sampleBtn = new Button({
                 parent: null,
-                style: ButtonStyles.ShadowedWhite,
+                style: ButtonStyles.FlatWhite,
                 icon: CAROUSEL_ICON_NAMES[this.carouselCounter],
                 ariaId: CAROUSEL_NAMES[this.carouselCounter],
                 x: 0,
-                y: 32,
+                y: 40,
                 onClick: () => {
                     if (this.carouselCounter === 0) {
                         this.app.popScene()
@@ -72,11 +72,11 @@ namespace microcode {
             })
             this.selectBtnR = new Button({
                 parent: null,
-                style: ButtonStyles.ShadowedWhite,
+                style: ButtonStyles.BorderedPurple,
                 icon: "next_page",
                 ariaId: "next sample button",
-                x: 26,
-                y: 32,
+                x: 32,
+                y: 40,
                 onClick: () => {
                     if (this.carouselCounter < CAROUSEL_NAMES.length-1) {
                         this.carouselCounter++
