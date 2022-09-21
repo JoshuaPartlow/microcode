@@ -7,12 +7,14 @@ const inIFrame = (() => {
         return typeof window !== "undefined"
     }
 })()
-const webUsb = (() => typeof navigator !== "undefined" && !!navigator.webUsb)()
 
 let bus
 let connectEl
 const refreshUI = () => {
-    if (bus.connected) connectEl.style.display = "none"
+    if (bus.connected) {
+        connectEl.style.display = "none"
+        document.getElementById("connectDlg").close()
+    }
     else connectEl.style.display = "inherit"
     const statusText = bus.connected
         ? "micro:bit connected"
@@ -23,7 +25,7 @@ const refreshUI = () => {
 }
 
 // to support downloading directly to device
-if (!inIFrame && webUsb)
+if (!inIFrame)
     document.addEventListener("DOMContentLoaded", () => {
         const script = document.createElement("script")
         script.setAttribute("type", "text/javascript")
@@ -49,8 +51,9 @@ if (!inIFrame && webUsb)
             bus.on(jacdac.CONNECTION_STATE, refreshUI)
             bus.on(jacdac.ERROR, e => console.error(e))
             // connect must be triggered by a user interaction
-            connectEl.onclick = async () =>
-                bus.connected ? bus.disconnect() : bus.connect()
+            connectEl.onclick = () => document.getElementById("connectDlg").showModal()
+
+            document.getElementById("webusbBtn").onclick = async () => bus.connect()
             document.body.append(connectEl)
             refreshUI()
             bus.autoConnect = true
@@ -149,6 +152,7 @@ const liveStrings = {
     A4: "music",
     A5: "paint",
     A6: "radio send",
+    A7: "random number",
 
     M1: "page 1",
     M2: "page 2",

@@ -38,7 +38,7 @@ namespace microcode {
 
             this.selectBtnL = new Button({
                 parent: null,
-                style: "white",
+                style: ButtonStyles.ShadowedWhite,
                 icon: "prev_page",
                 ariaId: "previous sample button",
                 x: -26,
@@ -52,7 +52,7 @@ namespace microcode {
             })
             this.sampleBtn = new Button({
                 parent: null,
-                style: "white",
+                style: ButtonStyles.ShadowedWhite,
                 icon: CAROUSEL_ICON_NAMES[this.carouselCounter],
                 ariaId: CAROUSEL_NAMES[this.carouselCounter],
                 x: 0,
@@ -72,7 +72,7 @@ namespace microcode {
             })
             this.selectBtnR = new Button({
                 parent: null,
-                style: "white",
+                style: ButtonStyles.ShadowedWhite,
                 icon: "next_page",
                 ariaId: "next sample button",
                 x: 26,
